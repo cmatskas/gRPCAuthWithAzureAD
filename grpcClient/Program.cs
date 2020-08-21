@@ -18,18 +18,29 @@ namespace grpcClient
             var token = await authProvider.GetAccessToken(new string[] {configuration["scope"]});
 
             var channel = GrpcChannel.ForAddress("https://localhost:5001");
-            var client = new Greeter.GreeterClient(channel);
+            var greeterClient = new Greeter.GreeterClient(channel);
+            var graphClient = new GraphService.GraphServiceClient(channel);
             
             var headers = new Metadata();
             headers.Add("Authorization", $"Bearer {token}");
             
-            var request = new HelloRequest()
+            var greeterRequest = new HelloRequest()
             {
                 Name = "SpongeBob"
             };
 
-            var reply = await client.SayHelloAsync(request, headers);
+            var reply = await greeterClient.SayHelloAsync(greeterRequest, headers);
             Console.WriteLine(reply.Message);
+            Console.WriteLine(Environment.NewLine);
+            Console.WriteLine("Fetching calendar data");
+            
+            var calendarRequest = new CalendarRequest()
+            {
+                Name = "Christos"
+            };
+
+            var calendarResponse = await graphClient.GetCalendarAsync(calendarRequest, headers);
+            Console.WriteLine(calendarResponse.Message);
         }
 
         static void LoadAppSettings()

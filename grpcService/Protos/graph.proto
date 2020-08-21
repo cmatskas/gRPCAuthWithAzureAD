@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option csharp_namespace = "grpcWithAuth";
+
+package graph;
+
+service GraphService {
+    // Sends the calendar info from Graph
+    rpc GetCalendar (CalendarRequest) returns (CalendarReply);
+  }
+  
+  // The request message
+  message CalendarRequest {
+    string name = 1;
+  }
+  
+  // The response message containing the calendar information.
+  message CalendarReply {
+    string message = 1;
+  }

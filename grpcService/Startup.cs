@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.TokenCacheProviders.InMemory;
 
 namespace grpcWithAuth
 {
@@ -23,8 +24,11 @@ namespace grpcWithAuth
         {
             services.AddGrpc();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftWebApi(Configuration);
+            services.AddMicrosoftWebApiAuthentication(Configuration)
+                    .AddMicrosoftWebApiCallsWebApi(Configuration)
+                    .AddInMemoryTokenCaches();
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+              //  .AddMicrosoftWebApi(Configuration);
             
             services.AddAuthorization();
         }
@@ -44,6 +48,7 @@ namespace grpcWithAuth
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<GreeterService>();
+                endpoints.MapGrpcService<GraphAPIService>();
 
                 endpoints.MapGet("/", async context =>
                 {
