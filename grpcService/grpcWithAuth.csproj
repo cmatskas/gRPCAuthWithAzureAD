@@ -3,11 +3,11 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\graph.proto" GrpcServices="Server" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.27.0" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="0.2.3-preview" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.1.0" />
+	<PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="1.1.0" />
   </ItemGroup>
 </Project>

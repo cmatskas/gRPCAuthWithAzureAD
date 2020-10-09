@@ -1,24 +1,23 @@
-using System.Net.Http;
-using System.Net.Http.Headers;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Web;
+using Microsoft.Graph;
 using Microsoft.Identity.Web.Resource;
 
 namespace grpcWithAuth
 {
     public class GraphAPIService : GraphService.GraphServiceBase
     {
-        private static string[] requiredScope = new string[] {"access_as_user"};
-        private static string[] scopes = new string[] {"Calendars.Read"};
+        private static readonly string[] requiredScope = new string[] {"access_as_user"};
         private readonly ILogger<GraphAPIService> _logger;
-        private readonly ITokenAcquisition _tokenAcquisition;
-        public GraphAPIService(ILogger<GraphAPIService> logger, ITokenAcquisition tokenAcquisition)
+        private readonly GraphServiceClient _graphServiceClient;
+        public GraphAPIService(ILogger<GraphAPIService> logger, GraphServiceClient graphServiceClient)
         {
             _logger = logger;
-            _tokenAcquisition = tokenAcquisition;
+            _graphServiceClient = graphServiceClient;
         }
 
         [Authorize]
@@ -27,17 +26,24 @@ namespace grpcWithAuth
             var httpContext = context.GetHttpContext();
             httpContext.VerifyUserHasAnyAcceptedScope(requiredScope);
 
-            var token = await _tokenAcquisition.GetAccessTokenForUserAsync(scopes);
-            
-            var graphUri = "https://graph.microsoft.com/v1.0/me/events?$top=5&$select=subject,bodyPreview,start,end";
+            if (!request.Name.Equals("Christos", StringComparison.OrdinalIgnoreCase))
+            {
+                // search the Graph for the user's calendar data
+                // to-do
+                return new CalendarReply();
+            }
 
-            var http = new HttpClient();
-            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Bearer", token);
-            var data = await http.GetStringAsync(graphUri);
+            var data = await _graphServiceClient.Me.Events
+                .Request()
+                .Select("subject,bodyPreview,start,end")
+                .GetAsync();
 
             return new CalendarReply
             {
-                Message = data
+                Subject = data.First().Subject,
+                BodyPreview = data.First().BodyPreview,
+                Start = data.First().Start.DateTime,
+                End = data.First().End.DateTime
             };
         }
     }

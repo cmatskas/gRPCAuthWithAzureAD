@@ -1,9 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Grpc.Core;
 using Grpc.Net.Client;
 using grpcWithAuth;
 using Microsoft.Extensions.Configuration;
+
+using static System.Console;
 
 namespace grpcClient
 {
@@ -18,21 +19,10 @@ namespace grpcClient
             var token = await authProvider.GetAccessToken(new string[] {configuration["scope"]});
 
             var channel = GrpcChannel.ForAddress("https://localhost:5001");
-            var greeterClient = new Greeter.GreeterClient(channel);
             var graphClient = new GraphService.GraphServiceClient(channel);
             
             var headers = new Metadata();
             headers.Add("Authorization", $"Bearer {token}");
-            
-            var greeterRequest = new HelloRequest()
-            {
-                Name = "SpongeBob"
-            };
-
-            var reply = await greeterClient.SayHelloAsync(greeterRequest, headers);
-            Console.WriteLine(reply.Message);
-            Console.WriteLine(Environment.NewLine);
-            Console.WriteLine("Fetching calendar data");
             
             var calendarRequest = new CalendarRequest()
             {
@@ -40,7 +30,11 @@ namespace grpcClient
             };
 
             var calendarResponse = await graphClient.GetCalendarAsync(calendarRequest, headers);
-            Console.WriteLine(calendarResponse.Message);
+            WriteLine("*************** New event found ***************");
+            WriteLine($"Calendar event subject: {calendarResponse.Subject}");
+            WriteLine($"Calendar event body preview: {calendarResponse.BodyPreview}");
+            WriteLine($"Calendar event start date/time: {calendarResponse.Start}");
+            WriteLine($"Calendar event end date/time: {calendarResponse.End }");
         }
 
         static void LoadAppSettings()

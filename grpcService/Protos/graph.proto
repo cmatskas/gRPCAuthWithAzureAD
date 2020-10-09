@@ -16,5 +16,8 @@ service GraphService {
   
   // The response message containing the calendar information.
   message CalendarReply {
-    string message = 1;
+    string subject = 1;
+    string bodyPreview = 2;
+    string start = 3;
+    string end = 4;
   }

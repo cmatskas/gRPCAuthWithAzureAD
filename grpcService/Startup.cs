@@ -24,11 +24,10 @@ namespace grpcWithAuth
         {
             services.AddGrpc();
 
-            services.AddMicrosoftWebApiAuthentication(Configuration)
-                    .AddMicrosoftWebApiCallsWebApi(Configuration)
+            services.AddMicrosoftIdentityWebApiAuthentication(Configuration)
+                    .EnableTokenAcquisitionToCallDownstreamApi()
+                    .AddMicrosoftGraph(Configuration.GetSection("DownstreamApi"))
                     .AddInMemoryTokenCaches();
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-              //  .AddMicrosoftWebApi(Configuration);
             
             services.AddAuthorization();
         }
@@ -47,7 +46,6 @@ namespace grpcWithAuth
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<GreeterService>();
                 endpoints.MapGrpcService<GraphAPIService>();
 
                 endpoints.MapGet("/", async context =>
