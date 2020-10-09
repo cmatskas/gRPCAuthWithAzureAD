@@ -1,0 +1,66 @@
+{
+  "title": "gRPCService-Tour",
+  "steps": [
+    {
+      "file": "grpcService/Protos/graph.proto",
+      "line": 9,
+      "description": "The name of the exposed gRPC service"
+    },
+    {
+      "file": "grpcService/Protos/graph.proto",
+      "line": 14,
+      "description": "The expected request definition"
+    },
+    {
+      "file": "grpcService/Protos/graph.proto",
+      "line": 18,
+      "description": "The expected response format. Think of this as the contract between the service and the client"
+    },
+    {
+      "file": "grpcService/Services/GraphService.cs",
+      "line": 16,
+      "description": "Inject (via Dependency Injection) the GraphServiceClient (this is from the Graph SDK, not the gRPC service)"
+    },
+    {
+      "file": "grpcService/Services/GraphService.cs",
+      "line": 27,
+      "description": "Ensure that the incoming request has the appropriate scope(s). This is a one-liner thanks to the Microsoft.Identity.Web"
+    },
+    {
+      "file": "grpcService/Services/GraphService.cs",
+      "line": 23,
+      "description": "Ensure you add the Authorize attribute to the call to authenticate the incoming request!"
+    },
+    {
+      "file": "grpcService/appsettings.json",
+      "line": 20,
+      "description": "This is required as we execute an On-Behalf-Of request. The gRPC service requests Graph data on behalf of the user :)"
+    },
+    {
+      "file": "grpcService/appsettings.json",
+      "line": 22,
+      "description": "The Graph API is our downstream API and we need to tell the middleware how to configure the Graph Client (part of the Microsoft.Identity.Web configuration)"
+    },
+    {
+      "file": "grpcService/grpcWithAuth.csproj",
+      "line": 11,
+      "description": "The Microsoft.Identity.Web.MicrosoftGraph is a new NuGet package the provides seamless, low-friction integration with Microsoft.Identity.Web"
+    },
+    {
+      "file": "grpcService/Startup.cs",
+      "line": 27,
+      "description": "With a few lines of code, we tell our application that we want to create a secure API, that calls another API (MS Graph) and that we also want to cache our tokens so that we can reduce the calls to Azure AD. In this instance we're using In-Memory tokens, but there are options for session or distributed caches as well"
+    },
+    {
+      "file": "grpcService/Startup.cs",
+      "line": 32,
+      "description": "Ensure you add Authorization to the middleware"
+    },
+    {
+      "file": "grpcService/Startup.cs",
+      "line": 44,
+      "description": "Configure the middleware to autnenticate and authorize incoming requests"
+    }
+  ],
+  "ref": "MSGraph"
+}

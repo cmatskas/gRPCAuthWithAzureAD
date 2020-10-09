@@ -1,0 +1,51 @@
+{
+  "title": "gRPCClient-Tour",
+  "steps": [
+    {
+      "file": "grpcClient/appsettings.json",
+      "line": 2,
+      "description": "The Azure AD app registration settings"
+    },
+    {
+      "file": "grpcClient/appsettings.json",
+      "line": 6,
+      "description": "The scope exposed by our gRPC Service App Registration "
+    },
+    {
+      "file": "grpcClient/DeviceCodeAuthProvider.cs",
+      "line": 15,
+      "description": "Configure our msalClient to use Device Code flow"
+    },
+    {
+      "file": "grpcClient/DeviceCodeAuthProvider.cs",
+      "line": 28,
+      "description": "Prompt the user to authenticate using Device Code flow. For a true deamon app, we would be using Client Credential with a certificate as we don't expect user interaction and everything should run as a service. We use Device Code flow here for the purpose of the demo"
+    },
+    {
+      "file": "grpcClient/Program.cs",
+      "line": 19,
+      "description": "Prompt the authentication here"
+    },
+    {
+      "file": "grpcClient/Program.cs",
+      "line": 22,
+      "description": "Instantiate a GraphServiceClient that points to the gRPC Service"
+    },
+    {
+      "file": "grpcClient/Program.cs",
+      "line": 25,
+      "description": "Add the Bearer token to our header so that we can get authenticated on the service"
+    },
+    {
+      "file": "grpcClient/Program.cs",
+      "line": 27,
+      "description": "Create a calendar request. This could be updated to pass specific paramaters like date range instead of a name"
+    },
+    {
+      "file": "grpcClient/Program.cs",
+      "line": 32,
+      "description": "Execute the request to the gRPC service"
+    }
+  ],
+  "ref": "MSGraph"
+}
